@@ -1,1 +1,1 @@
-console.log('Moro!')
+console.log('Moro!');
