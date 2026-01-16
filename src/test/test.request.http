@@ -1,0 +1,11 @@
+# Test HTTP request
+### use with: REST Client extension
+
+###Get all items
+GET http://localhost:3000/items
+
+### Add new item
+POST http://localhost:3000/items
+Content-Type: application/json
+
+{"Name": "Mandariini"}
