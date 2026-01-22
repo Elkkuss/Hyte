@@ -17,15 +17,17 @@ app.get('/api', (req, res) => {
 });
 
 //get items
-app.get('/items', getItems);
+app.get('/api/items', getItems);
 // get items by id
-app.get('/items/:id', getItemById);
+app.get('/api/items/:id', getItemById);
 //PUT route for items
-app.put('/items/:id', putItembyid);
+app.put('/api/items/:id', putItembyid);
 // DELETE route for items
-app.delete('/items/:id', deleteItembyid);
+app.delete('/api/items/:id', deleteItembyid);
 // Add new items
-app.post('/items', postnewItem);
+app.post('/api/items', postnewItem);
+// Users resource endpoints
+app.get('/users', (req, res) => {});
 
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
