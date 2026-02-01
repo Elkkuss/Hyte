@@ -2,7 +2,6 @@
 erDiagram
     USERS ||--o{ DIARYENTRIES : has
     USERS ||--o{ SLEEPENTRIES : tracks
-    USERS ||--o{ DIETPLANS : has
 
     USERS {
         int user_id PK
