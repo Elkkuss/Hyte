@@ -1,10 +1,5 @@
-// Dummy mock data ( nollaantuu aina, kun sovelluksen käynnistää uudelleen)
+import items from "../models/item-model.js";
 
-const items = [
-  {id: 1, name: 'Omena'},
-  {id: 2, name: 'Banaani'},
-  {id: 3, name: 'Appelsiini'},
-];
 
 const getItems = (req, res) => {
   res.json(items);

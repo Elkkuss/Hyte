@@ -1,30 +1,9 @@
-/**
- * Mock data and endpoints for users and resources.
- */
+//Huom mock data on poistettu
 
 
-const users = [
-  {
-    id: 1,
-    username: "johndoe",
-    password: "password1",
-    email: "johndoe@example.com"
-  },
-  {
-    id: 2,
-    username: "janedoe",
-    password: "password2",
-    email: "janedoe@example.com"
-  },
-  {
-    id: 3,
-    username: "bobsmith",
-    password: "password3",
-    email: "bobsmith@example.com"
-  }
-];
+import {findUserByUsername} from '../models/user-model.js';
 
-//TODO add users endpoints
+// TODO: refaktoroi tietokantafunktiolle
 
 const getUsers = (request, response) => {
   // ÄLÄ ikinä lähetä salasanoja HTTP vastauksessa!
@@ -92,14 +71,18 @@ const postUser = (req, res) => {
   res.status(201).json({message: 'new user added', user_id: newUser});
 };
 
-const postLogin = (req, res) => {
+
+// Tietokanta versio valmis
+const postLogin = async (req, res) => {
   const {username, password} = req.body;
   // Haetaan käyttäjä objekti nimeen perusteella
-  const userFound = users.find(user => username === user.username);
-  if (userFound) {
-    if(userFound.password === password) {
-      delete userFound.password;
-      return res.json({message: 'login ok', user: userFound});
+  const user = await findUserByUsername(username);
+  console.log('postLogin user from db', user);
+
+  if (user) {
+    if(user.password === password) {
+      delete user.password;
+      return res.json({message: 'login ok', user: user});
     }
     return res.status(403).json({error: 'invalid password'});
   }
