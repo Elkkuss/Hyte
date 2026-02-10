@@ -1,75 +1,43 @@
 //Huom mock data on poistettu
 
-
-import {findUserByUsername} from '../models/user-model.js';
+import jwt from 'jsonwebtoken';
+import {findUserByUsername, getAllUsers, getUserById, createUser} from '../models/user-model.js';
 
 // TODO: refaktoroi tietokantafunktiolle
 
-const getUsers = (request, response) => {
-  // ÄLÄ ikinä lähetä salasanoja HTTP vastauksessa!
-  for (let i=0; i<users.length; i++) {
-    delete users[i].password;
+const getUsers = async (req, res) => {
+  try {
+    const users = await getAllUsers();
+    res.json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
-  response.json(users);
 };
 
-// TODO getUserById
-const getUserById = (req, res) => {
-  console.log('getting user id:', req.params.id);
-  const userFound = users.find((user) => user.id == req.params.id);
-  if (userFound) {
-    const userToReturn = {...userFound};
-    delete userToReturn.password;
-    res.json(userToReturn);
+const getUsersById = async (req, res) => {
+  const entry = await getUserById(req.params.id);
+  if (entry){
+    res.json(entry);
   } else {
-    res.status(404).json({message: 'user not found'});
+    res.sendstatus(404)
   }
 };
 
-// TODO putUserById
-const putUserById = (req, res) => {
-  console.log('Update user id:', req.params.id);
-  const userIndex = users.findIndex((user) => user.id == req.params.id);
-  if (userIndex !== -1) {
-    // ÄLÄ salli salasanan päivitystä tällä metodilla
-    const updatedUser = {...req.body};
-    delete updatedUser.password;
-    users[userIndex] = {id: users[userIndex].id, ...updatedUser};
-    res.json({message: 'User updated'});
+const addUser = async (req, res) => {
+  const {username,password,email} = req.body;
+  if (username&&password&&email){
+    const result = await createUser(username,password,email);
+  if (result.user_id) {
+    return res.status(201).json({message: 'New user added.', ...result});
   } else {
-    res.status(404).json({message: 'User not found'});
+    return res.status(500).json(result);
   }
-};
-
-// TODO deleteUserById
-const deleteUserById = (req, res) => {
-  console.log('Delete user id:', req.params.id);
-  const userIndex = users.findIndex((user) => user.id == req.params.id);
-  if (userIndex !== -1) {
-    users.splice(userIndex, 1);
-    res.json({message: 'User deleted'});
   } else {
-    res.status(404).json({message: 'User not found'});
+    res.sendStatus(400);
   }
 };
 
-// Käyttäjän lisäys, (rekisteröinti)
-const postUser = (req, res) => {
-  const newUser = req.body;
-  // uusilla käyttäjillä pitää olla kaikki vaaditut ominaisuudet
-  if ( !(newUser.username && newUser.password && newUser.email)) {
-    return res.status(400).json({error: 'missing user data'});
-  }
-  // HUOM: älä ikinä loggaa käyttäjätietoja pakollisten testien jälkeen
-  // console.log('registering new user', newUser);
-  const newId = users[users.length-1].id + 1;
-  // luodaan uusi objekti joka sisältää id:n
-  // ja kaikki newuser ominaisuudet
-  users.push({id: newId, ...newUser});
-  delete newUser.password;
-  console.log('users', users);
-  res.status(201).json({message: 'new user added', user_id: newUser});
-};
 
 
 // Tietokanta versio valmis
@@ -80,13 +48,24 @@ const postLogin = async (req, res) => {
   console.log('postLogin user from db', user);
 
   if (user) {
-    if(user.password === password) {
+    if (user.password === password) {
       delete user.password;
-      return res.json({message: 'login ok', user: user});
+      // generate and sign token using a secret from .env file
+      const token = jwt.sign(user, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRES_IN,
+      });
+      return res.json({message: 'login ok', user, token});
     }
     return res.status(403).json({error: 'invalid password'});
   }
   res.status(404).json({error: 'user not found'});
 };
 
-export {getUsers, postUser, postLogin, getUserById, putUserById, deleteUserById };
+// Get user information based on token
+const getMe = (req, res) => {
+  res.json(req.user);
+};
+
+export {
+  getUsers, getUsersById, addUser, postLogin, getMe
+};

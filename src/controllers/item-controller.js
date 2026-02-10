@@ -38,11 +38,18 @@ const deleteItembyid = (req, res) => {
 };
 
 const postnewItem = (req, res) => {
-  //console.log('Lisätään request', req.body)
-  const newId = items.length > 0 ? items[items.length - 1].id + 1 : 1;
-  req.body.id = newId;
-  items.push(req.body);
-  res.status(201).json({message: 'New item added'});
+ // console.log('add item request body), req.body);
+ // name is mandatory property for new item
+ if (!req.body.name) {
+  // jos nimi puuttuu, funktion suoritus loppuu ja plautetaan 400 error
+  return res.status(400).json({message: 'bad request'});
+ }
+ // lisää id listaan lisättäville objektille
+ const newId =
+  items.length > 0 ? Math.max(...items.map((item) => item.id)) + 1 : 1;
+const newItem = {id: newId, ...req.body};
+items.push(newItem);
+res.status(201).json({message: 'new item added', item: newItem});
 };
 
 

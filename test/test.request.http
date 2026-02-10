@@ -24,19 +24,23 @@ Content-Type: application/json
 
 {"name": "updated Omena"}
 
+###################
 ### users endpoints
 
 ### GET all users
 GET {{apiurl}}/users
+
+### Get user by id:
+GET {{apiurl}}/users/3
 
 ### Register new user
 POST {{apiurl}}/users
 Content-Type: application/json
 
 {
-  "username": "donald",
-  "password": "duck",
-  "email": "donald@example.com"
+  "username": "aku",
+  "password": "ankka",
+  "email": "ankka@example.com"
 }
 
 ### Register new user Fail (missing email)
@@ -57,6 +61,10 @@ Content-Type: application/json
   "password": "hashed_password"
 }
 
+### Get user info by token
+GET {{apiurl}}/users/me
+Authorization: Bearer 9!48gh30rvfw3$räp9hp4€0tb8hpö49rt8gwhp9rå83ghä$p958bvpw49rg8hp23r89ghrt6y56un7!i85mnb6ve5byw45y
+
 ### Get user by id 1
 GET {{apiurl}}/user/1
 
@@ -70,7 +78,7 @@ Content-Type: application/json
 }
 
 ### Delete user by id 1
-DELETE {{apiurl}}/user/1
+DELETE {{apiurl}}/user/11
 
 ### iary entry endpoints
 
