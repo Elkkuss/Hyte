@@ -1,7 +1,7 @@
 //Huom mock data on poistettu
-
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import {findUserByUsername, getAllUsers, getUserById, createUser} from '../models/user-model.js';
+import {findUserByUsername, getAllUsers, getUserById, addUser} from '../models/user-model.js';
 
 // TODO: refaktoroi tietokantafunktiolle
 
@@ -24,18 +24,24 @@ const getUsersById = async (req, res) => {
   }
 };
 
-const addUser = async (req, res) => {
-  const {username,password,email} = req.body;
-  if (username&&password&&email){
-    const result = await createUser(username,password,email);
-  if (result.user_id) {
-    return res.status(201).json({message: 'New user added.', ...result});
-  } else {
-    return res.status(500).json(result);
+// käyttäjän lisäys
+const postUser = async (pyynto, vastaus) => {
+  const newUser = pyynto.body;
+
+  // itse koodattu erittäin yksinkertainen syötteen validointi
+  if (!(newUser.username && newUser.password && newUser.email)) {
+    return vastaus.status(400).json({error: 'required fields missing'});
   }
-  } else {
-    res.sendStatus(400);
-  }
+  // HUOM: ÄLÄ ikinä loggaa käyttäjätietoja ensimmäisten pakollisten testien jälkeen!!! (tietosuoja)
+  //console.log('registering new user', newUser);
+
+  // Lasketaan salasanasta tiiviste (hash)
+  const hash = await bcrypt.hash(newUser.password, 10);
+  //console.log('salasanatiiviste:', hash);
+  // Korvataan selväkielinen salasana tiivisteellä ennen kantaan tallennusta
+  newUser.password = hash;
+  const newUserId = await addUser(newUser);
+  vastaus.status(201).json({message: 'new user added', user_id: newUserId});
 };
 
 
@@ -45,10 +51,11 @@ const postLogin = async (req, res) => {
   const {username, password} = req.body;
   // Haetaan käyttäjä objekti nimeen perusteella
   const user = await findUserByUsername(username);
-  console.log('postLogin user from db', user);
+  //console.log('postLogin user from db', user);
 
   if (user) {
-    if (user.password === password) {
+    // jos asiakkaalta tullut salasana vastaa tietokannasta haettua tiivistettä
+    if (await bcrypt.compare(password, user.password)) {
       delete user.password;
       // generate and sign token using a secret from .env file
       const token = jwt.sign(user, process.env.JWT_SECRET, {
@@ -67,5 +74,5 @@ const getMe = (req, res) => {
 };
 
 export {
-  getUsers, getUsersById, addUser, postLogin, getMe
+  getUsers, getUsersById, postUser, postLogin, getMe
 };

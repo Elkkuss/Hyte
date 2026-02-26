@@ -2,6 +2,7 @@
 ### use with: REST Client extension
 
 @apiurl = http://localhost:3000/api
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyMywidXNlcm5hbWUiOiJ0ZXN0aXVzZXIiLCJlbWFpbCI6InRlc3RpQGV4YW1wbGUuY29tIiwiY3JlYXRlZF9hdCI6IjIwMjYtMDItMjZUMTQ6MTA6MTguMDAwWiIsInVzZXJfbGV2ZWwiOiJyZWd1bGFyIiwiaWF0IjoxNzcyMTE1MDU1LCJleHAiOjE3NzIyMDE0NTV9.hJMFhfGP8U1RoW7Oe2vT7bBRqY_SQcSh-0QmxHEj430
 
 ### GET all items
 GET {{apiurl}}/items
@@ -27,8 +28,9 @@ Content-Type: application/json
 ###################
 ### users endpoints
 
-### GET all users
+### GET all users (with token)
 GET {{apiurl}}/users
+Authorization: Bearer {{token}}
 
 ### Get user by id:
 GET {{apiurl}}/users/3
@@ -38,9 +40,9 @@ POST {{apiurl}}/users
 Content-Type: application/json
 
 {
-  "username": "aku",
-  "password": "ankka",
-  "email": "ankka@example.com"
+  "username": "testiuser",
+  "password": "testisalis",
+  "email": "testi@example.com"
 }
 
 ### Register new user Fail (missing email)
@@ -57,13 +59,13 @@ POST {{apiurl}}/users/login
 Content-Type: application/json
 
 {
-  "username": "bob_brown",
-  "password": "hashed_password"
+  "username": "testiuser",
+  "password": "testisalis"
 }
 
 ### Get user info by token
 GET {{apiurl}}/users/me
-Authorization: Bearer 9!48gh30rvfw3$räp9hp4€0tb8hpö49rt8gwhp9rå83ghä$p958bvpw49rg8hp23r89ghrt6y56un7!i85mnb6ve5byw45y
+Authorization: Bearer {{token}}
 
 ### Get user by id 1
 GET {{apiurl}}/user/1
@@ -80,20 +82,25 @@ Content-Type: application/json
 ### Delete user by id 1
 DELETE {{apiurl}}/user/11
 
-### iary entry endpoints
+### Diary entry endpoints
 
-### Get all entries
+### Get all entries (by user id in token)
 GET {{apiurl}}/entries
+Authorization: Bearer {{token}}
 
 ### Get entries using id
 GET {{apiurl}}entries/6
 
+### Delete entry by id
+DELETE {{apiurl}}/entries/6
+Authorization: Bearer {{token}}
+
 ### Post new entry
 POST {{apiurl}}/entries
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
-  "user_id": 3,
   "entry_date": "2026-02-05",
   "mood": "really happy",
   "weight": 72,
