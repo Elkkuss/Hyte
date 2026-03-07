@@ -2,7 +2,7 @@
 ### use with: REST Client extension
 
 @apiurl = http://localhost:3000/api
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyMywidXNlcm5hbWUiOiJ0ZXN0aXVzZXIiLCJlbWFpbCI6InRlc3RpQGV4YW1wbGUuY29tIiwiY3JlYXRlZF9hdCI6IjIwMjYtMDItMjZUMTQ6MTA6MTguMDAwWiIsInVzZXJfbGV2ZWwiOiJyZWd1bGFyIiwiaWF0IjoxNzcyMTE1MDU1LCJleHAiOjE3NzIyMDE0NTV9.hJMFhfGP8U1RoW7Oe2vT7bBRqY_SQcSh-0QmxHEj430
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyMywidXNlcm5hbWUiOiJ0ZXN0aXVzZXIiLCJlbWFpbCI6InRlc3RpQGV4YW1wbGUuY29tIiwiY3JlYXRlZF9hdCI6IjIwMjYtMDItMjZUMTQ6MTA6MTguMDAwWiIsInVzZXJfbGV2ZWwiOiJyZWd1bGFyIiwiaWF0IjoxNzcyMzcxODM1LCJleHAiOjE3NzI0NTgyMzV9.FzjdIkcYxreLGkUtp2H_dsc_FL90KcsqvLIcAhM9aL0
 
 ### GET all items
 GET {{apiurl}}/items
@@ -89,7 +89,7 @@ GET {{apiurl}}/entries
 Authorization: Bearer {{token}}
 
 ### Get entries using id
-GET {{apiurl}}entries/6
+GET {{apiurl}}/entries/17
 
 ### Delete entry by id
 DELETE {{apiurl}}/entries/6
@@ -101,9 +101,9 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "entry_date": "2026-02-05",
-  "mood": "really happy",
+  "entry_date": "2026-02-26",
+  "mood": "happy",
   "weight": 72,
   "sleep_hours": 7,
-  "notes": "normipäivä"
+  "notes": "Koulupäivä"
 }

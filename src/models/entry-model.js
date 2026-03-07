@@ -32,6 +32,9 @@ const findEntryById = async (id) => {
     // turvaton tapa, mahdollistaa sql-injektiohaavoittuvuuden:
     //const [rows] = await promisePool.query('SELECT * FROM DiaryEntries WHERE entry_id =' + id);
 
+    if (rows.length === 0) {
+      return { error: 'Entry not found' };
+    }
     //console.log('rows', rows);
     return rows[0];
   } catch (e) {
